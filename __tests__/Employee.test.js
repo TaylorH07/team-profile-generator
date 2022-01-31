@@ -1,4 +1,4 @@
-const { TestWatcher } = require("@jest/core");
+
 const Employee = require("../lib/Employee");
 
 test('creates a player obect', () => {
@@ -6,7 +6,7 @@ test('creates a player obect', () => {
     const id = 1;
     const email = "email@email.com";
     const newGuy = new Employee(name,id,email);
-    expect(newGuy.getName()).tobe("object")
+    expect(newGuy.getName()).toBe("object")
 });
 
 test('creates a player obect', () => {
@@ -14,7 +14,7 @@ test('creates a player obect', () => {
     const id = 1;
     const email = "email@email.com";
     const newGuy = new Employee(name,id,email);
-    expect(newGuy.getName()).tobe(name)
+    expect(newGuy.getName()).toBe(name)
 });
 
 test('creates a player obect', () => {
@@ -22,7 +22,7 @@ test('creates a player obect', () => {
     const id = 1;
     const email = "email@email.com";
     const newGuy = new Employee(name,id,email);
-    expect(newGuy.getName()).tobe(id)
+    expect(newGuy.getName()).toBe(id)
 });
 
 test('creates a player obect', () => {
@@ -30,5 +30,5 @@ test('creates a player obect', () => {
     const id = 1;
     const email = "email@email.com";
     const newGuy = new Employee(name,id,email);
-    expect(newGuy.getName()).tobe("Employee")
+    expect(newGuy.getName()).toBe("Employee")
 })
