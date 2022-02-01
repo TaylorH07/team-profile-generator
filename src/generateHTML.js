@@ -113,7 +113,7 @@ const generateTeamPage = function (employeeCard) {
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-      <link rel="stylesheet" href="dist/style.css">
+      <link rel="stylesheet" href="../dist/style.css">
   </head>
   <body>
       <header>
@@ -130,7 +130,7 @@ const generateTeamPage = function (employeeCard) {
           </div>
       </main>
       <footer>
-    <p>Made with ❤ by <a href="https://github.com/TaylorH07">Taylor Holmes</a></p>
+    <p>Achieving Greatness ★ by <a href="https://github.com/TaylorH07">Taylor Holmes</a></p>
     </footer>
       
   </body>

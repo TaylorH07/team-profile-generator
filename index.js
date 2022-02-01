@@ -1,24 +1,24 @@
 //link to page creation
 const generateHTML= require('./src/generateHTML')
 
-// node modules
-const fs = require("fs");
-const inquirer = require("inquirer");
-//const path = require("path");
-
 //team profiles
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 
+// node modules
+const fs = require("fs");
+const inquirer = require("inquirer");
+//const path = require("path");
+
 //team array
-const createTeam = []
+const createTeam = [];
 
 // add manager prompts
 const createManager = () => {
     console.log('Answer the prompts to enter manager information');
     
-    inquirer.prompt ([
+    return inquirer.prompt ([
         {
             type: 'input',
             name: 'name',
@@ -49,18 +49,20 @@ const createManager = () => {
             type: 'input',
             name: 'email',
             message: "What is your manager's email?",
-            validate: emailInput => {
-                if (emailInput) {
+            validate: email => {
+                valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
+                if (valid) {
                     return true;
                 } else {
-                    return 'Please enter managers email.';
+                    console.log ('Please enter valid email address')
+                    return false; 
                 }
-            } 
+            }
         },
         
         {
             type: 'input',
-            name: 'office Number',
+            name: 'officeNumber',
             message: "What is your manager's office number?",
             validate: officeInput => {
                 if (officeInput) {
@@ -72,226 +74,158 @@ const createManager = () => {
         },
         {
             type: 'confirm',
-            name: 'confirmAddEmployee',
-            message: 'Would you like to add more team members?',
+            name: 'confirmCreation',
+            message: 'Would you like to add more members to the team?',
             default: false
         }   
     ])
-    .then(answers => {
-        console.log(answers);
-        const manager = new Manager(
-            answers.name,
-            answers.id,
-            answers.email,
-            answers.officeNumber)
+    .then(managerInput => {
+        const  { name, id, email, officeNumber } = managerInput; 
+        const manager = new Manager (name, id, email, officeNumber);
 
-            createTeam.push(manager);
-            addEmployee();
-
+        createTeam.push(manager); 
+        console.log(manager); 
     })
-};
-
-// add engineer prompts
-function createEngineer() {
-    console.log('Answer the prompts to enter engineer information');
-    
-    inquirer.prompt ([
-        {
-            type: 'input',
-            name: 'name',
-            message: " What is your engineer's name?",
-            validate: nameInput => {
-                if (nameInput) {
-                    return true;
-                } else {
-                    return "Please enter engineer's name";
-                }
-            }
-        },
-
-        {
-            type: 'input',
-            name: 'id',
-            message: "What is your engineers's ID badge number?",
-            validate: idInput => {
-                if (idInput) {
-                    return true;
-                } else {
-                    return "Please enter engineer's badge number.";
-                }
-            } 
-        },
-        
-        {
-            type: 'input',
-            name: 'email',
-            message: "What is your engineer's email?",
-            validate: emailInput => {
-                if (emailInput) {
-                    return true;
-                } else {
-                    return "Please enter engineer's email.";
-                }
-            } 
-        },
-        
-        {
-            type: 'input',
-            name: 'gitHub',
-            message: "What is your engineer's gitHub?",
-            validate: gitHubInput => {
-                if (gitHubInput) {
-                    return true;
-                } else {
-                    return "Please enter Engineer's gitHub.";
-                }
-            } 
-        },
-        {
-            type: 'confirm',
-            name: 'confirmAddEmployee',
-            message: 'Would you like to add more team members?',
-            default: false
-        },   
-    ])
-    .then(answers => {
-        console.log(answers);
-        const manager = new Engineer(
-            answers.name,
-            answers.id,
-            answers.email,
-            answers.officeNumber)
-
-            createTeam.push(manager);
-            addEmployee();
-
-    });
-};
-
-// add intern prompts
-function createIntern() {
-    console.log('Answer the prompts to enter intern information');
-    
-    inquirer.prompt ([
-        {
-            type: 'input',
-            name: 'name',
-            message: "What is your intern's name?",
-            validate: nameInput => {
-                if (nameInput) {
-                    return true;
-                } else {
-                    return "Please enter intern's name.";
-                }
-            }
-        },
-
-        {
-            type: 'input',
-            name: 'id',
-            message: "What is your intern's ID badge number?",
-            validate: idInput => {
-                if (idInput) {
-                    return true;
-                } else {
-                    "Please enter intern's badge number.";
-                }
-            } 
-        },
-        
-        {
-            type: 'input',
-            name: 'email',
-            message: "What is your intern's email?",
-            validate: emailInput => {
-                if (emailInput) {
-                    return true;
-                } else {
-                    return "Please enter intern's email.";
-                }
-            } 
-        },
-        
-        {
-            type: 'input',
-            name: 'schoolName',
-            message: "What is your intern's school name?",
-            validate: schoolInput => {
-                if (schoolInput) {
-                    return true;
-                } else {
-                    return "Please enter intern's school.";
-                }
-            } 
-        },
-        {
-            type: 'confirm',
-            name: 'confirmAddEmployee',
-            message: 'Would you like to add more team members?',
-            default: false
-        }   
-    ])
-    .then(answers => {
-        console.log(answers);
-        const manager = new Intern(
-            answers.name,
-            answers.id,
-            answers.email,
-            answers.officeNumber)
-
-            createTeam.push(manager);
-            addEmployee();
-
-    });
 };
 
 const createEmployee = () => {
-    inquirer.prompt([
+    console.log(`
+    =================
+    Adding employees to the team
+    =================
+    `);
+
+    return inquirer.prompt ([
         {
             type: 'list',
-            name: 'newEmployee',
-            message: 'Which type of employee will be joining the team?',
-            choices: ['Manager', 'Engineer', 'Intern', 'finished creating employee profiles']
+            name: 'role',
+            message: "Please choose the role of your employee",
+            choices: ['Engineer', 'Intern', 'Manager']
+        },
+        {
+            type: 'input',
+            name: 'name',
+            message: "What is your employee's name?", 
+            validate: nameInput => {
+                if (nameInput) {
+                    return true;
+                } else {
+                    console.log ("Please enter your employee's name :)");
+                    return false; 
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'id',
+            message: "Please enter your employee's ID badge number.",
+            validate: nameInput => {
+                if  (isNaN(nameInput)) {
+                    console.log ("Please enter badge number.")
+                    return false; 
+                } else {
+                    return true;
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'email',
+            message: "Please enter the employee's email.",
+            validate: email => {
+                valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
+                if (valid) {
+                    return true;
+                } else {
+                    console.log ('Please enter valid email address')
+                    return false; 
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'gitHub',
+            message: "Please enter your engineer's gitHub username.",
+            when: (input) => input.role === "Engineer",
+            validate: nameInput => {
+                if (nameInput ) {
+                    return true;
+                } else {
+                    console.log ("Please enter engineer's gitHub username")
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'school',
+            message: "Please enter the intern's school",
+            when: (input) => input.role === "Intern",
+            validate: nameInput => {
+                if (nameInput) {
+                    return true;
+                } else {
+                    console.log ("Please enter school name")
+                }
+            }
+        },
+        {
+            type: 'confirm',
+            name: 'confirmCreation',
+            message: 'Would you like to add more team members?',
+            default: false
         }
     ])
-    .then(choice => {
-        switch (choice.newEmployee) {
-            case 'Manager':
-                createManager();
-                break;
-            case 'Engineer':
-                createEngineer();
-                break;
-            case 'Intern':
-                createIntern();
-                break;
-            default:
-                writeFile()
+    .then(employeeData => {
+        // data for employee types 
+
+        let { name, id, email, role, gitHub, school, confirmCreation } = employeeData; 
+        let employee; 
+        
+        if (role === "Engineer") {
+            employee = new Engineer (name, id, email, gitHub);
+
+            console.log(employee);
+
+        } else if (role === "Intern") {
+            employee = new Intern (name, id, email, school);
+
+            console.log(employee);
+        }
+
+        createTeam.push(employee); 
+
+        if (confirmCreation) {
+            return createEmployee(createTeam); 
+        } else {
+            return createTeam;
         }
     })
-}
 
-// write file to generate HTML page
+};
+
+
+// function to generate HTML page file using file system 
 const writeFile = data => {
     fs.writeFile('./dist/index.html', data, err => {
-        //will err if error
+        // if there is an error 
         if (err) {
             console.log(err);
             return;
-        //when profile has been created 
+        // when the profile has been created 
         } else {
-            console.log('Your team has been created! :)')
+            console.log("Congratulations! You have successfully created your DREAM TEAM!")
         }
     })
-};
+}; 
 
 createManager()
-    .then(createTeam => {
-        return generateHTML(createTeam);
-    })
-    .then(pageHTML => {
-        return writeFile(pageHTML);
-    })
-    .catch(err => {
-        console.log(err);
-    });
+  .then(createEmployee)
+  .then(createTeam => {
+    return generateHTML(createTeam);
+  })
+  .then(pageHTML => {
+    return writeFile(pageHTML);
+  })
+  .catch(err => {
+ console.log(err);
+  });
