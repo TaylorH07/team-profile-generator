@@ -162,7 +162,7 @@ function createEngineer() {
             answers.email,
             answers.officeNumber)
 
-            team.push(manager);
+            createTeam.push(manager);
             addEmployee();
 
     });
@@ -239,7 +239,7 @@ function createIntern() {
             answers.email,
             answers.officeNumber)
 
-            team.push(manager);
+            createTeam.push(manager);
             addEmployee();
 
     });
@@ -286,8 +286,8 @@ const writeFile = data => {
 };
 
 createManager()
-    .then(team => {
-        return generateHTML(team);
+    .then(createTeam => {
+        return generateHTML(createTeam);
     })
     .then(pageHTML => {
         return writeFile(pageHTML);
