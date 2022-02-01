@@ -1,20 +1,18 @@
+//link to page creation
+const generateHTML= require('./src/generateHTML')
 
 // node modules
 const fs = require("fs");
 const inquirer = require("inquirer");
-const path = require("path");
+//const path = require("path");
 
 //team profiles
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
-const Intern = require("./lib/Intern")
-
-
-//add dist outputs and path
-
+const Intern = require("./lib/Intern");
 
 //team array
-const team = []
+const createTeam = []
 
 // add manager prompts
 const createManager = () => {
@@ -71,14 +69,24 @@ const createManager = () => {
                     return 'Please enter managers office number.';
                 }
             } 
-        },   
+        },
+        {
+            type: 'confirm',
+            name: 'confirmAddEmployee',
+            message: 'Would you like to add more team members?',
+            default: false
+        }   
     ])
-    .then(managerInput => {
-        const { name, id, email, officeNumber } = managerInput;
-        const manager = new Manager(name, id, email, officeNumber);
+    .then(answers => {
+        console.log(answers);
+        const manager = new Manager(
+            answers.name,
+            answers.id,
+            answers.email,
+            answers.officeNumber)
 
-        teamArray.push(manager);
-        console.log(manager);
+            createTeam.push(manager);
+            addEmployee();
 
     })
 };
@@ -138,8 +146,26 @@ function createEngineer() {
                     return "Please enter Engineer's gitHub.";
                 }
             } 
+        },
+        {
+            type: 'confirm',
+            name: 'confirmAddEmployee',
+            message: 'Would you like to add more team members?',
+            default: false
         },   
-    ]);
+    ])
+    .then(answers => {
+        console.log(answers);
+        const manager = new Engineer(
+            answers.name,
+            answers.id,
+            answers.email,
+            answers.officeNumber)
+
+            team.push(manager);
+            addEmployee();
+
+    });
 };
 
 // add intern prompts
@@ -197,7 +223,75 @@ function createIntern() {
                     return "Please enter intern's school.";
                 }
             } 
-        },   
-    ]);
+        },
+        {
+            type: 'confirm',
+            name: 'confirmAddEmployee',
+            message: 'Would you like to add more team members?',
+            default: false
+        }   
+    ])
+    .then(answers => {
+        console.log(answers);
+        const manager = new Intern(
+            answers.name,
+            answers.id,
+            answers.email,
+            answers.officeNumber)
+
+            team.push(manager);
+            addEmployee();
+
+    });
 };
 
+const createEmployee = () => {
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'newEmployee',
+            message: 'Which type of employee will be joining the team?',
+            choices: ['Manager', 'Engineer', 'Intern', 'finished creating employee profiles']
+        }
+    ])
+    .then(choice => {
+        switch (choice.newEmployee) {
+            case 'Manager':
+                createManager();
+                break;
+            case 'Engineer':
+                createEngineer();
+                break;
+            case 'Intern':
+                createIntern();
+                break;
+            default:
+                writeFile()
+        }
+    })
+}
+
+// write file to generate HTML page
+const writeFile = data => {
+    fs.writeFile('./dist/index.html', data, err => {
+        //will err if error
+        if (err) {
+            console.log(err);
+            return;
+        //when profile has been created 
+        } else {
+            console.log('Your team has been created! :)')
+        }
+    })
+};
+
+createManager()
+    .then(team => {
+        return generateHTML(team);
+    })
+    .then(pageHTML => {
+        return writeFile(pageHTML);
+    })
+    .catch(err => {
+        console.log(err);
+    });
