@@ -28,8 +28,8 @@ const genEngineer = function (engineer) {
             </div>
             <div class="card-body">
                 <p class="id">ID: ${engineer.id}</p>
-                <p class="email">Email: <a href="mailto:${engineer.email}">${engineer.email}</a></p>
-                <p class="github">Github: <a href="https://github.com/${engineer.github}">${engineer.github}</a></p>
+                <p class="email">Email: <a  href="mailto:${engineer.email}">${engineer.email}</a></p>
+                <p class="github">Github: <a target="blank" href="https://github.com/${engineer.gitHub}">${engineer.gitHub}</a></p>
             </div>
         </div>
     </div>
@@ -90,16 +90,16 @@ generateHTML = (data) => {
     }
 
     // joining strings 
-    const employeeCard = cardArray.join('')
+    const teamCards = cardArray.join('')
 
     // return to generated page
-    const genTeam = generateTeamPage(employeeCard); 
+    const genTeam = generateTeamPage(teamCards); 
     return genTeam;
 
 }
 
 // generate html page 
-const generateTeamPage = function (employeeCard) {   
+const generateTeamPage = function (teamCards) {   
   return`
   <!DOCTYPE html>
   <html lang="en">
@@ -125,7 +125,7 @@ const generateTeamPage = function (employeeCard) {
           <div class="container">
               <div class="row justify-content-center" id="team-cards">
                   <!--Team Cards-->
-                  ${employeeCard}
+                  ${teamCards}
               </div>
           </div>
       </main>
